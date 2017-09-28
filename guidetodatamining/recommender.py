@@ -182,7 +182,7 @@ class recommender:
             return (sum_xy - (sum_x * sum_y) / n) / denominator
 
 
-    def computeNearestNeighbor(self, username):
+    def computeNearestNeighbor2(self, username):
         """creates a sorted list of users based on their distance to
         username"""
         distances = []
@@ -196,7 +196,7 @@ class recommender:
                        reverse=True)
         return distances
 
-    def recommend(self, user):
+    def recommend2(self, user):
        """Give list of recommendations"""
        recommendations = {}
        # first get list of users  ordered by nearness
@@ -239,4 +239,52 @@ class recommender:
                             reverse = True)
        # Return the first n items
        return recommendations[:self.n]
+
+def manhattan(rating1, rating2):
+    """Computes the Manhatta distance.
+    Both rating1 and 2 are dictionaries of the form {'The Strokes': 3.0, 'Slightly Stoopid': 2.5 .."""
+
+    distance = 0
+    for key in rating1:
+        if key in rating2:
+            distance += abs(rating1[key] - rating2[key])
+    return distance
+
+def computeNearestNeighbor(username, users):
+    """creates a sorted list of users based on their distance to
+     username"""
+    distances = []
+    for user in users:
+        if user != username:
+            distance = manhattan(users[user], users[username])
+            distances.append((distance, user))
+    # sort based on distance -- closest first
+    distances.sort()
+    return distances
+def recommend(username, users):
+    """Give list of recommendations"""
+    # first find nearest neighbor
+    nearest = computeNearestNeighbor(username, users)[0][1]
+    recommendations = []
+    # now find bands neighbour rated that user didn't
+    neighbourRatings = users[nearest]
+    userRatings = users[username]
+    for artist in neighbourRatings:
+        if not artist in userRatings:
+            recommendations.append((artist, neighbourRatings[artist]))
+    # using the fn sorted for variety - sort is more efficient
+    return sorted(recommendations,
+                  key=lambda artistTuple: artistTuple[1],
+                  reverse = True)
+
+
+
+
+    
+
+
+
+
+
+    
 
