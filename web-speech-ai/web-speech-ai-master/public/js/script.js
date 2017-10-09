@@ -17,7 +17,8 @@ document.querySelector('button').addEventListener('click', () => {
   recognition.start();
 });
 
-document.getElementById("sendMessageForm").addEventListener("submit", function(){
+document.getElementById("sendMessage").addEventListener('click', () => {
+  console.log("sendMessage btn clicked")
   let msg = document.getElementById('message').value;
   socket.emit('chat message', msg);
 });
@@ -55,6 +56,7 @@ function synthVoice(text) {
 }
 
 socket.on('bot reply', function(replyText) {
+  console.log("reply: "+replyText);
   synthVoice(replyText);
 
   if(replyText == '') replyText = '(No answer...)';
