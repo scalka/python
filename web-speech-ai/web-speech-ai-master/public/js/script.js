@@ -17,6 +17,12 @@ document.querySelector('button').addEventListener('click', () => {
   recognition.start();
 });
 
+document.getElementById("sendMessageForm").addEventListener("submit", function(){
+  let msg = document.getElementById('message').value;
+  socket.emit('chat message', msg);
+});
+
+
 recognition.addEventListener('speechstart', () => {
   console.log('Speech has been detected.');
 });
