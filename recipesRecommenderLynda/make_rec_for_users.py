@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import pickle
 import matrix_factorization_utilities
 
 # TODO Understand Matrix Factorisation and current features
@@ -19,6 +20,11 @@ U, R = matrix_factorization_utilities.low_rank_matrix_factorization(ratings_df.a
                                                                     regularization_amount=0.1)
 #find all predicted ratings by multiplying the U by R
 predicted_ratings = np.matmul(U, R)
+
+# SAVE FEATURES AND PREDICTED RATINGS TO FILE FOR LATER USE
+#pickle.dump(U, open("user_features_recipes.dat", "wb"))
+#pickle.dump(R, open("product_features_recipes.dat", "wb"))
+#pickle.dump(predicted_ratings, open("predicted_ratings_recipes.dat", "wb"))
 
 print("Enter a user_id to get recommendations (Between 1 and 100):")
 user_id_to_search = int(input())
