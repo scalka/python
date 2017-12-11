@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import matrix_factorization_utilities
 
-# TODO Understand Matrix Factorisation and current features
-
 #load ratings
 raw_dataset_ratings_df = pd.read_csv("recipe_ratings_data_set.csv")
 #load recipe titles
@@ -12,10 +10,13 @@ recipes_df = pd.read_csv("recipes.csv", index_col="recipes_id")
 #convert running list of user ratings into matrix
 ratings_df = pd.pivot_table(raw_dataset_ratings_df, index="user_id", columns="recipes_id", aggfunc=np.max)
 #apply matrxi factorization to find the latent features
+#num_features=15,- number of latenet features
+# regularixation_amount - more regularization will raise the training score, but it may lower the testing score.
 U, R = matrix_factorization_utilities.low_rank_matrix_factorization(ratings_df.as_matrix(),
                                                                     num_features=15,
                                                                     regularization_amount=0.1)
 #find all predicted ratings by multiplying the U by R
+# matmul - matrix multiplication
 predicted_ratings = np.matmul(U, R)
 #save
 #predicted_ratings_df = pd.DataFrame(index=ratings_df.index,
@@ -23,6 +24,9 @@ predicted_ratings = np.matmul(U, R)
  #                                   data=predicted_ratings)
 #predicted_ratings_df.to_csv("predicted_ratings.csv")
 
+
+
+# FIND SIMILAR PRODUCTS
 # Swap the rows and columns of product_features just so it's easier to work with
 R = np.transpose(R)
 

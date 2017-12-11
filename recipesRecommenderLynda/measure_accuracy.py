@@ -1,3 +1,5 @@
+# Measure recommender accuracy with Root mean square error
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -6,13 +8,14 @@ import matrix_factorization_utilities
 
 raw_dataset = pd.read_csv('recipe_ratings_data_set.csv')
 # Load user ratings
-raw_training_dataset_df, raw_testing_dataset_df = train_test_split(raw_dataset, test_size=0.)
+raw_training_dataset_df, raw_testing_dataset_df = train_test_split(raw_dataset, test_size=0.3)
 
 # Convert the running list of user ratings into a matrix
 ratings_training_df = pd.pivot_table(raw_training_dataset_df, index='user_id', columns='recipes_id', aggfunc=np.max)
 ratings_testing_df = pd.pivot_table(raw_testing_dataset_df, index='user_id', columns='recipes_id', aggfunc=np.max)
 
 # Apply matrix factorization to find the latent features
+# adjust regularixation_amount for better RMSE- more regularization will raise the training score, but it may lower the testing score.
 U, M = matrix_factorization_utilities.low_rank_matrix_factorization(ratings_training_df.as_matrix(),
                                                                     num_features=15,
                                                                     regularization_amount=0.1)

@@ -18,4 +18,3 @@ user_ratings = predicted_ratings[user_id_to_search - 1]
 recipes_df['rating'] = user_ratings
 recipes_df = recipes_df.sort_values(by=['rating'], ascending=False)
 
-print(recipes_df[['title', 'category', 'rating']].head(15))
