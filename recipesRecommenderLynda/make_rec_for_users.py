@@ -4,31 +4,33 @@ import pickle
 import matrix_factorization_utilities
 
 #load ratings
-raw_dataset_ratings_df = pd.read_csv("recipe_ratings_data_set.csv")
+raw_dataset_ratings_df = pd.read_csv('newest_rating_data.csv')
 #load recipe titles
-recipes_df = pd.read_csv("recipes2.csv", index_col="recipes_id")
+recipes_df = pd.read_csv("new_allrecipes.csv", index_col="recipes_id", encoding='latin1')
 
 #convert running list of user ratings into matrix
 ratings_df = pd.pivot_table(raw_dataset_ratings_df, index="user_id", columns="recipes_id", aggfunc=np.max)
 
+print(1)
 #apply matrxi factorization to find the latent features
 #num_features=15,- number of latenet features
 #regularisation_amount - more regularization will raise the training score, but it may lower the testing score.
 U, R = matrix_factorization_utilities.low_rank_matrix_factorization(ratings_df.as_matrix(),
                                                                     num_features=15,
                                                                     regularization_amount=0.1)
+print(1,5)
 #find all predicted ratings by multiplying the U by R
 # matmul - matrix multiplication
 predicted_ratings = np.matmul(U, R)
-#predicted_ratings_df = pd.DataFrame(index=ratings_df.index,
-#                                   columns=ratings_df.columns,
-#                                   data=predicted_ratings)
-#predicted_ratings_df.to_csv("predicted_ratings.csv")
-
+predicted_ratings_df = pd.DataFrame(index=ratings_df.index,
+                                   columns=ratings_df.columns,
+                                   data=predicted_ratings)
+predicted_ratings_df.to_csv("new_predicted_ratings.csv")
+print(2)
 # SAVE FEATURES AND PREDICTED RATINGS TO FILE FOR LATER USE
-#pickle.dump(U, open("user_features_recipes2.dat", "wb"))
-#pickle.dump(R, open("product_features_recipes2.dat", "wb"))
-#pickle.dump(predicted_ratings, open("predicted_ratings_recipes2.dat", "wb"))
+pickle.dump(U, open("newest_user_features_recipes.dat", "wb"))
+pickle.dump(R, open("newest_product_features_recipes.dat", "wb"))
+pickle.dump(predicted_ratings, open("newest_predicted_ratings_recipes.dat", "wb"))
 
 print("Enter a user_id to get recommendations (Between 1 and 100):")
 user_id_to_search = int(input())
